@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { RespuestaTopHeadlines } from '../interfaces/interfaces';
 import { environment } from '../../environments/environment';
 
-const apiKey = environment.apiKey; 
+const apiKey = environment.apiKey;
 const apiUrl = environment.apiUrl;
 
 const headers = new HttpHeaders({
@@ -19,14 +19,15 @@ export class NoticiasService {
 
   private ejecutarQuery<T>(query: string) {
     query = apiUrl + query;
+    console.log(query);
     return this.http.get<T>(query, {headers});
   }
 
-  getTopHeadlines(){
+  getTopHeadlines() {
     return this.ejecutarQuery<RespuestaTopHeadlines>('/top-headlines?country=us');
   }
 
-  getTopHeadlinesCategorias(categoria: string){
-    return this.ejecutarQuery<RespuestaTopHeadlines>('/top-headlines?country=us&category=${categoria}');
+  getTopHeadlinesCategoria(categoria: string) {
+    return this.ejecutarQuery<RespuestaTopHeadlines>(`/top-headlines?country=us&category=${categoria}`);
   }
 }
