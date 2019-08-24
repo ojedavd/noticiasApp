@@ -14,6 +14,7 @@ export class NoticiaComponent implements OnInit {
 
   @Input() noticia: Article;
   @Input() indice: number;
+  @Input() enFavoritos;
 
   constructor(private iab: InAppBrowser,
               private actionSheetCtrl: ActionSheetController,
@@ -27,39 +28,66 @@ export class NoticiaComponent implements OnInit {
   }
 
   async lanzarMenu() {
-    const actionSheet = await this.actionSheetCtrl.create({
-      buttons: [
-      {
-        text: 'Compartir',
-        icon: 'share',
+
+    let guardarBorrarBtn;
+
+    if ( this.enFavoritos ) {
+
+      guardarBorrarBtn = {
+        text: 'Borrar Favorito',
+        icon: 'trash',
         cssClass: 'action-dark',
         handler: () => {
-          console.log('Share clicked');
-          this.socialSharing.share(
-            this.noticia.title,
-            this.noticia.source.name,
-            '',
-            this.noticia.url
-          );
+          console.log('Borrar de favorito');
+          this.datalocalService.borrarNoticia( this.noticia );
         }
-      }, {
+      };
+
+    } else {
+
+      guardarBorrarBtn = {
         text: 'Favorito',
         icon: 'star',
         cssClass: 'action-dark',
         handler: () => {
-          console.log('Favorito clicked');
-          this.datalocalService.guardarNoticia(this.noticia);
+          console.log('Favorito');
+          this.datalocalService.guardarNoticia( this.noticia );
         }
-      }, {
+      };
+
+    }
+
+
+
+    const actionSheet = await this.actionSheetCtrl.create({
+      buttons: [
+        {
+          text: 'Compartir',
+          icon: 'share',
+          cssClass: 'action-dark',
+          handler: () => {
+            console.log('Share clicked');
+            this.socialSharing.share(
+              this.noticia.title,
+              this.noticia.source.name,
+              '',
+              this.noticia.url
+            );
+        }
+      },
+      guardarBorrarBtn,
+      {
         text: 'Cancelar',
         icon: 'close',
-        cssClass: 'action-dark',
         role: 'cancel',
+        cssClass: 'action-dark',
         handler: () => {
           console.log('Cancel clicked');
         }
       }]
     });
+
     await actionSheet.present();
+
   }
 }
