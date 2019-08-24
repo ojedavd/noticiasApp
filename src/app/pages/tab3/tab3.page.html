@@ -8,6 +8,16 @@
 
 <ion-content color="dark">
 
-  <app-noticias [noticias]="datalocalService.noticias"></app-noticias>
+  <ion-slides [options]="sliderOpts"
+              *ngIf="datalocalService.noticias.length === 0">
+
+    <ion-slide>
+      <ion-label>No hay noticias</ion-label>
+    </ion-slide>
+
+  </ion-slides>
+  
+  <app-noticias *ngIf="datalocalService.noticias.length > 0"
+                [noticias]="datalocalService.noticias"></app-noticias>
 
 </ion-content>
